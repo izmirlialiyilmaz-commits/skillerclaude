@@ -1,0 +1,15 @@
+{
+  "name": "connect-apps-plugin",
+  "version": "0.1.0",
+  "description": "Harici uygulamaları ve servisleri (OAuth, webhook, REST API, token, veri senkronizasyonu) güvenli bir şekilde bağlamak için rehber skill'i sağlar.",
+  "author": {
+    "name": "izmirlialiyilmaz"
+  },
+  "keywords": [
+    "integration",
+    "oauth",
+    "webhook",
+    "api",
+    "connect-apps"
+  ]
+}
