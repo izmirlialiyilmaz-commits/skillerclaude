@@ -17,6 +17,7 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
 | `security-pen-testing`, `senior-security` | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | MIT |
 | `image-to-code`, `design-code` | [plugin87/ux-ui-agent-skills](https://github.com/plugin87/ux-ui-agent-skills) | Lisans dosyası yok |
 | `watch` | [alexlarcheveque/claude-watch](https://github.com/alexlarcheveque/claude-watch) | MIT (© 2026 Alex Larcheveque) |
+| `public-apis` (veri) | [public-apis/public-apis](https://github.com/public-apis/public-apis) | MIT (© 2022 public-apis) |
 
 ## Kategorilere göre (2. parti kurulum)
 
@@ -26,6 +27,7 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
 - **Güvenlik testi / "hacker gibi" (etik/yetkili):** `security-pen-testing`, `senior-security`, `owasp-security`
 - **Video okuma / analizi:** `watch` (kare + transkript ile video izleme/hook analizi), `video-edit` (transkripsiyon), `video-to-landing-page`
 - **Site özellik kopyalayıcı / görselden koda:** `image-to-code`, `design-code`, `figma`
+- **API bulma / veri kaynağı:** `public-apis` (~1.900 ücretsiz/açık API'lik çevrimdışı katalog)
 
 ## Notlar
 
@@ -60,6 +62,21 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
     dosyaları skill'in `templates/` klasörüne dahil edildi.
   - **Maliyet:** Her çalıştırmada `/tmp/watch/<slug>/cost.json` yazılır; varsayılan
     fiyat sabitleri Opus 4.7'ye göredir, `WATCH_RATE_*` ortam değişkenleriyle değiştirilebilir.
+- **`public-apis`**: Kaynak repo **bir skill değildir** — 269 KB'lik bir `README.md`
+  içinde topluluk tarafından derlenmiş API listesi ve CI'ın kullandığı link doğrulama
+  script'lerinden ibarettir. Bu yüzden olduğu gibi kopyalanmadı; API tabloları
+  `scripts/build-catalog.py` ile ayrıştırılıp `references/apis.csv` +
+  `references/apis.md` (1888 API, 51 kategori) hâline getirildi, üstüne `SKILL.md` ve
+  `scripts/find-api.py` arama yardımcısı **bu repo için yazıldı**. Notlar:
+  - Katalog dosyaları ~240 KB'dir; `SKILL.md` bunları baştan sona okumayı yasaklar,
+    önce arama yapılmasını söyler: `python3 .claude/skills/public-apis/scripts/find-api.py
+    weather --no-auth --limit 5`. Dış bağımlılık yok, `python3` yeterli.
+  - Veri **anlık bir kopyadır** (upstream commit + tarih `SOURCE.md` içinde) ve
+    topluluk derlemesidir: endpoint'ler kapanabilir, ücretsiz katmanlar kalkabilir,
+    `auth`/`https`/`cors` sütunları eskimiş olabilir. `SKILL.md` bunu her yanıtta
+    belirtmeyi ve sağlayıcının kendi dokümanından doğrulamayı şart koşar.
+  - Upstream'in en üstündeki APILayer sponsor/tanıtım bloğu ve CI script'leri dahil
+    edilmedi. Katalog `build-catalog.py` ile upstream'den yeniden üretilebilir.
 - **`security-pen-testing` / `senior-security`**: Yalnızca **yetkili/etik** güvenlik testi
   içindir; sorumlu ifşa (responsible disclosure) kurallarını ve "veriyi exfiltrate etme"
   ilkesini içerir. İzniniz olmayan sistemlerde kullanılamaz.
