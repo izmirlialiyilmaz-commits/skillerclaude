@@ -16,6 +16,7 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
 | `postgres-patterns`, `mysql-patterns`, `database-migrations` | [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code) | MIT |
 | `security-pen-testing`, `senior-security` | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | MIT |
 | `image-to-code`, `design-code` | [plugin87/ux-ui-agent-skills](https://github.com/plugin87/ux-ui-agent-skills) | Lisans dosyası yok |
+| `watch` | [alexlarcheveque/claude-watch](https://github.com/alexlarcheveque/claude-watch) | MIT (© 2026 Alex Larcheveque) |
 
 ## Kategorilere göre (2. parti kurulum)
 
@@ -23,7 +24,7 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
 - **Görsel tasarım / tasarım sistemi:** `ux-design-systems`, `figma`, `mobile-responsiveness`, `web-accessibility`
 - **SQL modelleri & üreteci:** `postgres-patterns`, `mysql-patterns`, `database-migrations`, ER diyagramları için `mermaid-diagrams`; NoSQL için `mongodb`
 - **Güvenlik testi / "hacker gibi" (etik/yetkili):** `security-pen-testing`, `senior-security`, `owasp-security`
-- **Video okuma / analizi:** `video-edit` (transkripsiyon), `video-to-landing-page`
+- **Video okuma / analizi:** `watch` (kare + transkript ile video izleme/hook analizi), `video-edit` (transkripsiyon), `video-to-landing-page`
 - **Site özellik kopyalayıcı / görselden koda:** `image-to-code`, `design-code`, `figma`
 
 ## Notlar
@@ -40,6 +41,25 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
   Kaynak repodaki `install.sh` bir `curl | bash` kurucusudur; **güvenlik gereği otomatik
   çalıştırılmadı**. Skill tanımları kuruldu ama tam çalışması için bu araçların ayrıca
   kurulması gerekir.
+- **`watch`**: `/watch <url>` ile bir videoyu indirip (yt-dlp) kareleri ve sesi ayırır
+  (ffmpeg), altyazı yoksa ElevenLabs Scribe veya Groq Whisper ile transkript çıkarır ve
+  Claude'a kare + zaman damgalı transkripti birlikte verir. Kurulum notları:
+  - **Gerekli dış araçlar:** `yt-dlp`, `ffmpeg`/`ffprobe`, `python3`, `shasum`.
+    Kaynak repodaki `install.sh` **çalıştırılmadı** (brew ile paket kurmaya çalışıyor);
+    dosyalar elle `.claude/skills/watch/` altına kopyalandı. Araçları kendi paket
+    yöneticinizle kurun: `brew install yt-dlp ffmpeg` veya `apt install ffmpeg` + `pipx install yt-dlp`.
+  - **API anahtarı (opsiyonel):** Yalnızca gömülü altyazısı olmayan videolar için gerekir.
+    `.claude/skills/watch/.env.example` dosyasını `.env` olarak kopyalayıp
+    `ELEVENLABS_API_KEY` veya `GROQ_API_KEY` girin. `.env` `.gitignore` ile dışarıda tutulur.
+  - **Yapılan uyarlamalar:** (a) `SKILL.md` içindeki `bash skill/watch.sh` yolu kurulu
+    dizine göre düzeltildi; (b) `--mode retention|library` için hatalı prompt dosya adı
+    (`<mode>-analysis.md`) gerçek dosyalarla eşlendi; (c) `.env` artık skill dizininin
+    içinde de aranıyor; (d) HTML raporu açma adımı Linux'ta `xdg-open`, başlık yoksa
+    "sadece yolu yazdır" olacak şekilde genişletildi; (e) kaynak reponun kökündeki
+    `templates/hook-library.md`, `retention-report.md`, `batch-urls.csv.example`
+    dosyaları skill'in `templates/` klasörüne dahil edildi.
+  - **Maliyet:** Her çalıştırmada `/tmp/watch/<slug>/cost.json` yazılır; varsayılan
+    fiyat sabitleri Opus 4.7'ye göredir, `WATCH_RATE_*` ortam değişkenleriyle değiştirilebilir.
 - **`security-pen-testing` / `senior-security`**: Yalnızca **yetkili/etik** güvenlik testi
   içindir; sorumlu ifşa (responsible disclosure) kurallarını ve "veriyi exfiltrate etme"
   ilkesini içerir. İzniniz olmayan sistemlerde kullanılamaz.
