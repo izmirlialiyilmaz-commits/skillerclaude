@@ -15,7 +15,7 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
 | `pick-next-issue` | [tobihagemann/turbo](https://github.com/tobihagemann/turbo) | MIT (© 2026 Tobias Hagemann) |
 | `postgres-patterns`, `mysql-patterns`, `database-migrations` | [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code) | MIT |
 | `security-pen-testing`, `senior-security` | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | MIT |
-| `image-to-code`, `design-code` | [plugin87/ux-ui-agent-skills](https://github.com/plugin87/ux-ui-agent-skills) | Lisans dosyası yok |
+| `image-to-code`, `design-code` | [plugin87/ux-ui-agent-skills](https://github.com/plugin87/ux-ui-agent-skills) | MIT (© 2026 Thientan Soparat) |
 | `watch` | [alexlarcheveque/claude-watch](https://github.com/alexlarcheveque/claude-watch) | MIT (© 2026 Alex Larcheveque) |
 | `public-apis` (veri) | [public-apis/public-apis](https://github.com/public-apis/public-apis) | MIT (© 2022 public-apis) |
 
@@ -62,6 +62,28 @@ olarak tetiklenir. Her skill bir `SKILL.md` dosyası ve (varsa) yardımcı dosya
     dosyaları skill'in `templates/` klasörüne dahil edildi.
   - **Maliyet:** Her çalıştırmada `/tmp/watch/<slug>/cost.json` yazılır; varsayılan
     fiyat sabitleri Opus 4.7'ye göredir, `WATCH_RATE_*` ortam değişkenleriyle değiştirilebilir.
+- **`design-code` / `image-to-code`**: İlk kurulumda **eksik kurulmuşlardı** — kaynak repo
+  bir plugin deposu olduğu için `SKILL.md`'ler `.claude/skills/` altında, referans verdikleri
+  dosyalar ise repo kökünde duruyor; yalnızca `SKILL.md`'ler kopyalanmış, 13 ve 9 referans
+  boşa düşmüştü. Artık destek dosyaları skill klasörlerinin **içine** alındı:
+  - `frameworks/` (adapter protokolü + 3 tam referans + 16 kısa adapter), `components/`,
+    `tokens/` (450 token), `accessibility/`, `taste/`, `content/`, `workflows/`,
+    `design-systems/library/` (138 sistem), `examples/golden/` ve `scripts/`.
+  - `.claude/rules/tokens-and-color.md` → `rules/tokens-and-color.md` olarak taşındı,
+    `SKILL.md`'deki referans güncellendi.
+  - Upstream'in `accuracy_report.mjs` / `npm run verify` adımı **kasıtlı olarak alınmadı**:
+    bunlar kaynak deponun kendi CI self-test'i, kendi `examples/` ağacına sabitlenmiş;
+    üretilen kodu denetlemiyor. `SKILL.md` bunların yerine taşınabilir gate'leri çağırıyor.
+  - **Test edildi:** `contrast.py`, `lint_hardcodes.py`, `lint_taste.py`,
+    `validate_theme_refs.py`, `validate_tokens.py`, `validate_contrast.py`,
+    `design_systems.py` gerçekten çalıştırıldı, hepsi beklenen çıktıyı verdi.
+  - **Gerekli:** Python gate'leri için `python3` yeterli. Render tabanlı `.mjs` gate'leri
+    (`taste_audit`, `verify_states`, `measure_render`) Node + Playwright ister
+    (`npm i -D playwright && npx playwright install chromium`); kurulu değilse
+    "playwright not installed — SKIPPED" deyip 0 ile çıkarlar — atlanan gate "geçti" diye
+    raporlanmamalı.
+  - Kaynak repodaki diğer 17 skill (`design-tokens`, `apply-aesthetic`, `a11y-audit` …)
+    kurulu değil; `SKILL.md` bunlara atıf yaptığı yerlerde işi satır içi yapmayı söylüyor.
 - **`public-apis`**: Kaynak repo **bir skill değildir** — 269 KB'lik bir `README.md`
   içinde topluluk tarafından derlenmiş API listesi ve CI'ın kullandığı link doğrulama
   script'lerinden ibarettir. Bu yüzden olduğu gibi kopyalanmadı; API tabloları

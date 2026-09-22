@@ -128,6 +128,6 @@ To deliver **both** 16:9 and 9:16 in one go, run two render commands (in paralle
 | `references/host-template-vertical.html` | **9:16** host (1080×1920) — TikTok / Reels / Shorts layout: blurred bg, centered 16:9 footage strip, captions below, brand chip top-right |
 | `references/gen_body_vertical.py` | Caption-body generator tuned for vertical (centered pill, larger fonts, narrower max-width) |
 | `references/liquid-blobs.html` | Full-duration drifting blob layer |
-| `references/caption-parallax-outro.html` | Behind-subject caption template (English; clone for other languages) |
+| `references/caption-parallax-outro-en.html` | Behind-subject caption template (English; clone for other languages) |
 | `references/corrections-hebrew.md` | Known Hebrew Whisper mishears |
 | `references/transcript-review-workflow.md` | The pause/approve step in detail |
